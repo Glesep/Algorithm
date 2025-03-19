@@ -1,4 +1,3 @@
-# 변수 입력 받기
 N=int(input()) # N개의 행
 maze=[[*map(int,input().split())] for _ in range(N)]
 
