@@ -3,6 +3,9 @@ n = int(input())
 # 이전 숫자가 1이면 아무거나
 # 이전 숫자가 0이면 1
 
+# 이는 이전 숫자가 1이면 0을 추가로 고려하고, 
+# 모든 경우의 수에 1을 고려해야 한다는 뜻입니다.
+
 result = []
 
 def solveProb(count=0, num_result='', num_prev=-1):
