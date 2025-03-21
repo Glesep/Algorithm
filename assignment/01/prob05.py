@@ -1,3 +1,5 @@
+# BFS로 풀어보기
+
 # 파일 불러오기
 with open("./files/maze.txt", 'r', encoding='utf-8-sig') as f:
     N = int(f.readline())
