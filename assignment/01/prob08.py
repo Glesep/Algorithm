@@ -9,6 +9,13 @@ with open('./files/input.txt', 'r', encoding='utf-8-sig') as f:
 include = [None] * N    # 물건이 들어가는지 들어가지 않는지 정의하는 boolean 리스트
 max_value = -1
 def Knapsack_powerset(k):
+    """
+    멱집합을 구하는 알고리즘을 이용하여 모든 경우의 수를 확인 후, </br>
+    조건에 맞는 답을 추출해내는 함수입니다.
+
+    Args:
+        k (int): 멱집합 알고리즘의 상태이상트리에서 현재 위치. 기본값:0
+    """
     
     global max_value
     
