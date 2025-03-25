@@ -66,7 +66,7 @@ def solveMaze(x, y, dir, dir_before, move_count, rest_count):
             
             if moveable(x, y, dir):     # 움직일 수 있으면
                 
-                # move_count가 "3이 될 때" / "움직인 전적이 있는데" 방향을 바꾸려 할 때
+                # move_count가 "K가 될 때" / "움직인 전적이 있는데" 방향을 바꾸려 할 때
                 # 쉬었고(rest_count += 1), 한 번 움직였음(move_count = 1)을 알려주기
                 if (move_count == K) or (move_count != 0 and dir != dir_before):
                     solveMaze(x + offset[dir][0], y + offset[dir][1], 0, dir, 1, rest_count+1)

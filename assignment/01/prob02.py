@@ -34,11 +34,12 @@ def nearest(start, end, target):
             print(integers[mid])
         
         # target 기준 연속된 두 수가 절댓값이 같을 때 - 작은 것을 고름 (end case 2)
+        # 결국엔 2개가 남음
         elif end-start == 1:
             if abs(target - integers[end]) == abs(target - integers[start]):
                 print(integers[start])
             else:
-                print(integers[end] 
+                print(integers[end ] 
                       if abs(target-integers[end]) < abs(target - integers[start])
                       else integers[start])
             

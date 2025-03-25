@@ -17,7 +17,7 @@ def Team_powerset(x):
     조건에 맞는 답을 추출해내는 함수입니다.
 
     Args:
-        k (int): 멱집합 알고리즘의 상태이상트리에서 현재 위치. 기본값:0
+        x (int): 멱집합 알고리즘의 상태이상트리에서 현재 위치. 기본값:0
     """
     global max_potential
     
