@@ -103,7 +103,7 @@ def merge_sort(words_copy, start, end):
 
 def partition(words_copy, p, r):
     """하나의 시행에서 pivot을 기준으로 pivot보다 작은 수는 왼쪽, 큰 수는 오른쪽에 위치하도록 만들고, </br>
-    pivot의 현 위치를 반환하는 함수입니다.
+    변화된 리스트와 pivot의 현 위치를 반환하는 함수입니다.
 
     Args:
         words_copy (list): 정렬하고 싶은 인덱스
@@ -120,11 +120,11 @@ def partition(words_copy, p, r):
 
         if words_copy[j] <= pivot:
             i += 1
-            words_copy[i], words_copy[j] = words_copy[j],  words_copy[i]
+            words_copy[i], words_copy[j] = words_copy[j], words_copy[i]
         
     words_copy[i+1], words_copy[r] = words_copy[r], words_copy[i+1]
     
-    return i+1
+    return words_copy, i+1
 
     
 def quick_sort(words_copy, p, r):
@@ -139,7 +139,7 @@ def quick_sort(words_copy, p, r):
         list: 분할 정복 기법으로 도출된 정렬된 words_copy 리스트
     """
     if (p < r):
-        q = partition(words_copy, p, r)
+        words_copy, q = partition(words_copy, p, r)
         words_copy = quick_sort(words_copy, p, q-1)
         words_copy = quick_sort(words_copy, q+1, r)
         
@@ -211,38 +211,56 @@ def heap_sort(words_copy):
     
 archive = {}
 
+# sort들을 각각 실행하는 것은 측정이 되는데 한꺼번에 실행하는 것은 stackoverflow가 납니다.
 
-words_copied = words
-start_time = time.time()
-bubble_sort(words_copied)
-end_time = time.time()
-archive['bubble_sort'] = end_time-start_time
+# 380.6092691421509s
+# words_copied = words
+# start_time = time.time()
+# bubble_sort(words_copied)
+# end_time = time.time()
+# archive['bubble_sort'] = end_time-start_time
 
-words_copied = words
-start_time = time.time()
-words_copied = insertion_sort(words_copied)
-end_time = time.time()
-archive['insertion_sort'] = end_time-start_time
 
-words_copied = words
-start_time = time.time()
-words_copied = merge_sort(words_copied, 0, len(words_copied)-1)
-end_time = time.time()
-archive['merge_sort'] = end_time-start_time
+# 239.17551016807556s
+# words_copied = words
+# start_time = time.time()
+# words_copied = insertion_sort(words_copied)
+# end_time = time.time()
+# archive['insertion_sort'] = end_time-start_time
 
-# 에러 발생
-words_copied = words
-start_time = time.time()
-words_copied = quick_sort(words_copied, 0, len(words_copied)-1)
-end_time = time.time()
-archive['quick_sort'] = end_time-start_time
 
-words_copied = words
-start_time = time.time()
-words_copied = heap_sort(words_copied)
-end_time = time.time()
-archive['heap_sort'] = end_time-start_time
+# 0.15517807006835938
+# words_copied = words
+# start_time = time.time()
+# words_copied = merge_sort(words_copied, 0, len(words_copied)-1)
+# end_time = time.time()
+# archive['merge_sort'] = end_time-start_time
 
+
+# 3.721475839614868s
+# import sys
+# sys.setrecursionlimit(10000)
+
+# words_copied = words
+# start_time = time.time()
+# words_copied = quick_sort(words_copied, 0, len(words_copied)-1)
+# end_time = time.time()
+# print(words_copied)
+# archive['quick_sort'] = end_time-start_time
+
+
+# 44.33114433288574s
+# words_copied = words
+# start_time = time.time()
+# words_copied = heap_sort(words_copied)
+# end_time = time.time()
+# archive['heap_sort'] = end_time-start_time
+
+# 0.02200603485107422s
+# words_copied = words
+# start_time = time.time()
+# words_copied.sort()
+# end_time = time.time()
+# archive['library_sort'] = end_time-start_time
 
 print(archive)
-            
