@@ -1,8 +1,8 @@
 import math
 
 
-# CCW: Counter-Clockwise -> 양수 - 반시계, 음수 - 
-# p0 출발 p2 도착
+# CCW: Counter-Clockwise -> 양수 - 반시계, 음수 - 시계
+# p 출발 r 도착
 def ccw(p, q, r):
     val = (q[0] - p[0]) * (r[1] - p[1]) - (r[0] - p[0])*(q[1] - p[1])
 
