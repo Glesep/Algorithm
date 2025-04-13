@@ -56,7 +56,7 @@ def print_func(list_people):
     """list_people 내에 있는 모든 객체의 print_info() 함수를 실행시키는 함수입니다.
 
     Args:
-        list_people (_type_): _description_
+        list_people (list): person 객체가 들어있는 list
     """
     for p in list_people:
         p.print_info()
