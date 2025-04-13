@@ -214,11 +214,11 @@ archive = {}
 # sort들을 각각 실행하는 것은 측정이 되는데 한꺼번에 실행하는 것은 stackoverflow가 납니다.
 
 # 380.6092691421509s
-# words_copied = words
-# start_time = time.time()
-# bubble_sort(words_copied)
-# end_time = time.time()
-# archive['bubble_sort'] = end_time-start_time
+words_copied = words
+start_time = time.time()
+bubble_sort(words_copied)
+end_time = time.time()
+archive['bubble_sort'] = end_time-start_time
 
 
 # 239.17551016807556s
