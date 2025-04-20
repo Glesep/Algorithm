@@ -160,6 +160,42 @@ def isBST(root, lower=None, upper=None):
     return isBST(root.left, lower, root.val) and isBST(root.right, root.val, upper)
 
 
+# 루트에서 노드까지의 깊이 찾기
+def get_depth(node):
+    depth = 0 
+    while node:
+        node = node.parent
+        depth += 1
+        
+    return depth
+
+# 최소 공통 조상 찾기 - 14번
+def lowest_common_ancestor(node1, node2):
+    
+    depth1 = get_depth(node1)   # node1 깊이 - 루트부터 node1까지
+    depth2 = get_depth(node2)   # node2 깊이 - 루트부터 node2까지
+    
+    # 깊이 맞춰주기 - 둘 중 하나 실행
+    while depth1 > depth2:     
+        node1 = node1.parent
+        depth1 -= 1
+    
+    while depth1 < depth2:
+        node2 = node2.parent
+        depth2 -= 1
+        
+        
+    # 깊이가 서로 맞았으면 하나씩 올리면서 둘이 같아질 때까지 찾음    
+    while node1 != node2:
+        node1 = node1.parent
+        node2 = node2.parent
+        
+    return node1
+    
+
+
+
+# ================================================================================
 
 bt = BST()
 for v in [15, 6, 18, 3, 7, 17, 20, 2, 4, 13, 9]:
