@@ -16,6 +16,7 @@ class BST:
         x = self.root
         
         while x != None:
+            # x가 NIL 이 될때까지 타고 감 - y를 뒤따라오게함
             y = x
             if node.val < x.val:
                 x = x.left
@@ -148,10 +149,27 @@ class BST:
         return res
             
 
+def isBST(root, lower=None, upper=None):
+    
+    if root == None:
+        return True
+    
+    if (lower != None and root.val < lower) or (upper != None and root.val > upper):
+        return False
+    
+    return isBST(root.left, lower, root.val) and isBST(root.right, root.val, upper)
+
+
 
 bt = BST()
 for v in [15, 6, 18, 3, 7, 17, 20, 2, 4, 13, 9]:
     bt.insert(Node(v))
+
+if isBST(bt.root):
+    print ('BST입니다!!')
+else:
+    print ('BST 아닙니다...')
+    
 
 print(bt.level_order_traversal())
 print(bt.inorder_traversal(bt.root))
