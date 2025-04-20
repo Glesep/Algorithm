@@ -111,10 +111,26 @@ class BST:
     
     def inorder_traversal(self, node):
         res = []
-        if node:
+        if node:    # 노드 != NIL
             res = self.inorder_traversal(node.left)
             res.append(node.val)
             res = res + self.inorder_traversal(node.right)
+        return res
+    
+    def preorder_traversal(self, node):
+        res = []
+        if node:    # 노드 != NIL
+            res.append(node.val)
+            res = res + self.preorder_traversal(node.left)
+            res = res + self.preorder_traversal(node.right)
+        return res
+    
+    def postorder_traversal(self, node):
+        res = []
+        if node:    # 노드 != NIL
+            res = self.postorder_traversal(node.left)
+            res = res + self.postorder_traversal(node.right)
+            res.append(node.val)
         return res
     
     def level_order_traversal(self):
@@ -134,14 +150,13 @@ class BST:
 
 
 bt = BST()
-for v in [9, 13, 4, 2, 20, 17, 7, 3, 18, 6, 15]:
+for v in [15, 6, 18, 3, 7, 17, 20, 2, 4, 13, 9]:
     bt.insert(Node(v))
-print(bt.level_order_traversal())
 
-print(bt.search(bt.root, 3).val)
-bt.delete(bt.search(bt.root, 20))
 print(bt.level_order_traversal())
-
+print(bt.inorder_traversal(bt.root))
+print(bt.preorder_traversal(bt.root))
+print(bt.postorder_traversal(bt.root))
 
 
     
