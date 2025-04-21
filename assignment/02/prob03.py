@@ -71,6 +71,8 @@ class pqueue_heap:
 
         return self.max_heapify(words_copy, k)
     
+    # add되는 노드가 루트노드까지 올라가는 경우가 최악의 경우
+    # 따라서 add함수의 시간복잡도는 O(logn)
     def add(self, integer):
         
         self.heap.append(integer)
@@ -82,6 +84,7 @@ class pqueue_heap:
             i = self.parent(i)
     
     # 추출할 값이 있다고 가정
+    # max-heapify가 O(logn)의 시간복잡도를 가지므로 최대값을 추출하는 시간복잡도도 O(logn)
     def extractMax(self):
         
         max = self.heap[0]
