@@ -1,15 +1,3 @@
-class Node:
-    def __init__(self, 
-                 key,
-                 left_key,
-                 right_key):
-        self.val = key
-        self.left_val = left_key        # 왼쪽 자식 노드의 값
-        self.right_val = right_key      # 오른쪽 자식 노드의 값
-        self.left = None    # 왼쪽 자식 노드
-        self.right = None   # 오른쪽 자식 노드
-        self.parent = None  # 부모 노드 참조
-        
 # flag를 둬서 BST인지 확인
 def isBST_postorder(node_val, level=1):
     """
