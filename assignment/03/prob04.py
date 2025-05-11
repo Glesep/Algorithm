@@ -1,11 +1,13 @@
 class Node:
     def __init__(self, address_dict, parent=None):
-        self.address_dict = address_dict      #
+        self.address_dict = address_dict      # 한 사람의 address 정보가 dict형태로 저장됨
         self.left = None
         self.right = None
         self.parent = parent  # 부모 노드 참조
         
     def print_info(self):   # 노드의 정보를 출력하는 함수
+        """노드가 가지고 있는 address_dict 내 정보를 출력하는 함수
+        """
         for key, value in self.address_dict.items():
             if key == 'Name':
                 print(self.address_dict['Name'])
@@ -13,6 +15,11 @@ class Node:
                 print(f'\t{key}: {value}')
     
     def to_datastream_(self):
+        """address_dict의 value값을 문자열로 직렬화
+
+        Returns:
+            datastream: 직렬화된 value값
+        """
         values = [value for _, value in self.address_dict.items()]
 
         datastream = ""
@@ -20,12 +27,18 @@ class Node:
         
         return datastream
             
+# =========================================================================
 
 class address_BST:
     def __init__(self):
         self.root = None
 
     def insert(self, node):
+        """BST에 새로운 노드를 삽입하는 함수
+
+        Args:
+            node (Node): 삽입할 노드 객체
+        """
         y = None
         x = self.root
         
@@ -47,35 +60,50 @@ class address_BST:
             node.parent.right = node
     
     def delete_(self, name):
+        """BST 내에 이름으로 특정된 노드를 삭제
+
+        Args:
+            name (str): 찾고 싶은 노드의 address_dict['Name']에 해당하는 문자열
+        """
+        # 이름으로 특정된 노드를 찾기
         node_del_forLogic = self.search(self.root, name)
         
+        # 해당 이름을 가진 노드가 없을 때 - 함수 종료
         if not node_del_forLogic.address_dict:
             print(f"{name}'s information does not exist.")
             return
         
+        
+        # leaf 노드 or 자식 노드가 1개일 경우
         if node_del_forLogic.left == None or node_del_forLogic.right == None:
             node_del_forReal = node_del_forLogic
+        # 자식 노드가 2개일 경우
         else:
             node_del_forReal = self.tree_successor(node_del_forLogic)
         
+        
+        # 실제 삭제하는 노드의 왼쪽 자식이 있다 - successor 노드는 아님
         if node_del_forReal.left != None:   # 자식이 0개 아니면 1개 - 오른쪽 자식은 무조건 없음
             x = node_del_forReal.left
         else:
             x = node_del_forReal.right      # 만약 오른쪽 있으면 오른쪽 들어가고 없으면 None
         
         # 실제 삭제되어야 하는 노드를 삭제
-        if x != None:       # node_del_forReal를 삭제하고 삭제된 노드의 부모를 자신의 부모로 삼음 
+        if x != None:       # 삭제될 노드의 부모를 자신의 부모로 삼음 - node_del_forReal를 삭제 
             x.parent = node_del_forReal.parent
         
+        # 삭제될 노드의 부모가 없음 - 루트 노드가 삭제됨 - 자식이 루트로
         if node_del_forReal.parent == None:
             self.root = x
         
+        # 삭제되는 노드가 루트노드를 제외한 내부 노드일 때
         elif node_del_forReal == node_del_forReal.parent.left:
             node_del_forReal.parent.left = x
         
         else:
             node_del_forReal.parent.right = x
-            
+        
+        # 자식이 2개일 경우 - 진짜 삭제되는 노드와 논리적으로 삭제되는 노드가 다름
         if node_del_forReal != node_del_forLogic:       # successor 위치를 대신 삭제하는 경우
             
             # 자식 노드 관계는 위에서 다 정리됨. 나머지 데이터만 들고오기
@@ -129,6 +157,14 @@ class address_BST:
             return self.trace_name(x.right, k)
     
     def to_datastream(self, node):
+        """BST에 속한 Node의 to_datastream_() 함수를 preorder로 실행
+
+        Args:
+            node (Node): 시작할 Node 객체 - 보통 root
+
+        Returns:
+            list: 직렬화한 데이터를 모은 리스트
+        """
         serialized_data = []
         if node:    # 노드 != NIL
             serialized_data.append(node.to_datastream_())
@@ -153,9 +189,7 @@ class address_BST:
             x_parent = x_parent.parent
         
         return x_parent
-    
-    
-    
+
     def inorder_traversal(self, node):
         
         if node:    # 노드 != NIL
@@ -163,6 +197,7 @@ class address_BST:
             node.print_info()
             self.inorder_traversal(node.right)
         
+# =========================================================================
 
 def read(filename):
     """filename에 해당하는 파일 내 데이터를 읽고 BST 형태로 저장
@@ -215,6 +250,15 @@ def trace(BST_address, name):
         print(f"{name}'s information does not exist.")
 
 def add(BST_address, name):
+    """BST_address에 name에 해당하는 address 정보를 저장
+
+    Args:
+        BST_address (BST): address 정보가 들어있는 BST 객체
+        name (str): 문자열로 표현된 이름
+
+    Returns:
+        BST: 저장 과정이 끝난 BST
+    """
     target = BST_address.search(BST_address.root, name)
     
     if target.address_dict:
@@ -246,25 +290,12 @@ def save(BST_address, filename):
         f.write('name\tcompany_name\taddress\tzip\tphone\temail\n')
         f.writelines(serialize_data)
         
-        
-        
-        
-        
-
-
-
-
-
-
-
-
-
+# =========================================================================
 def app():
-    BST_address = read('address_book2020.tsv')      # debug
     while True:
         command = input().split()
-        # if command[0] == 'read':
-        # BST_address = read(command[1])
+        if command[0] == 'read':
+            BST_address = read(command[1])
             
         if command[0] == 'list':
             list(BST_address)
@@ -286,5 +317,7 @@ def app():
         
         elif command[0] == 'exit':
             break
-        
-app()      
+
+# =========================================================================
+if __name__ == "__main__":
+    app()
