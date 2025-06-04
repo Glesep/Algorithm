@@ -6,13 +6,7 @@ class edge:
     
     def __init__(self, weight, node=None):
         self.weight = weight
-        self.node = node
-        
-
-        
-        
-    
-    
+        self.child = node
 
 
 with open('./files/dict_simplified.txt', 'r') as f:
@@ -27,4 +21,9 @@ graph = defaultdict(edge)
 
 for key, value in explain_word:
     for word in value.split():
-        
+        if word in explain_word.keys():
+            node_now = graph[word]
+            while node_now.child != None:
+                node_now = node_now.child
+            node_now.child = edge()
+           
