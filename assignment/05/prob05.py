@@ -117,22 +117,24 @@ def answer2(graph_dict):
     print('Answer2:', vertex_max, degree_max)
     
 # DFS
-# 함수 들어올때 v를 인식하며 들어오므로 초기 값은 1
-def DFS(graph_dict, v, visited, component_sum=1):
-    visited[v] == 1
+# 함수 들어올때 v를 인식하며 들어오므로 component_sum의 초기 값은 1
+def DFS(graph_dict, v, visited):
+    visited[v] = 1
+    component_sum = 1
     
     p = graph_dict[v].root
     
     while p != None:
         if visited[p.word] == 0:
-            DFS(graph_dict, p.word, visited, component_sum+1)
+            component_sum += DFS(graph_dict, p.word, visited)
+        p = p.next
     
     return component_sum
 
 def answer3(graph_dict):
     # visited 초기화
     visited = {key:0 for key in graph_dict.keys()}
-    
+    compo_max = -1
     while 0 in visited.values():
         v = None
         for key, value in visited.items():
@@ -140,7 +142,12 @@ def answer3(graph_dict):
                 v = key
                 break
             
-        DFS(graph_dict, v)
+        # 변경 가능한 객체를 매개변수로 받아와 함수 안에서 작업하면 함수 밖에 존재하는 실체에도 값이 적용됨
+        compo_sum = DFS(graph_dict, v, visited)
+        if compo_sum > compo_max:
+            compo_max = compo_sum
+    
+    print('Answer3:', compo_max)   
         
 
                 
@@ -176,3 +183,4 @@ for title, value in explain_word.items():
 
 answer1(graph_dict)
 answer2(graph_dict)
+answer3(graph_dict)
