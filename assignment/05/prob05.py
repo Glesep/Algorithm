@@ -2,12 +2,10 @@ from collections import defaultdict
 
 class Node:
     
-    
     def __init__(self, word, next = None, weight = 1):
         self.word = word
         self.weight = weight
         self.next = next
-
 
 # dict의 value들 == Tree 객체가 됨
 class Tree:
@@ -43,18 +41,15 @@ class Tree:
         Node_target.weight += 1
         
     def traversal(self):
-        dict = {}
+        result = {}
         p = self.root
         
         while p != None:
-            dict[p.word] = p.weight
+            result[p.word] = p.weight
             p = p.next
         
-        return dict
+        return result
             
-        
-        
-
 # graph_dict : Tree 객체를 요소로 하는 defaultdict
 def make_graph(word, title, graph_dict):
     
@@ -70,8 +65,6 @@ def make_graph(word, title, graph_dict):
         graph_dict[word].push(title)
         graph_dict[title].push(word)
     
-    
-    
     # 둘 다 edge 트리를 가질 경우
     else:
         
@@ -84,16 +77,83 @@ def make_graph(word, title, graph_dict):
             graph_dict[title].update(result_1)          #각각 가중치 1씩 업데이트
             graph_dict[word].update(result_2)
             
-            
         # 연관성이 없었던 경우 3 - 둘 다 edge 트리를 가질 경우
         else:
             graph_dict[word].push(title)
             graph_dict[title].push(word)
             
                 
+def answer1(graph_dict):
+    # 정점 개수 파악(n)
+    vertex = len(graph_dict.keys())
+    edge = 0 
+    
+    # 에지 개수 세기 (2m)
+    for tree in graph_dict.values():
+        p = tree.root
+        
+        while p != None:
+            edge += 1
+            p = p.next
+    
+    print ('Answer1:', vertex, int(edge/2))
+    
+def answer2(graph_dict):
+    vertex_max = ''
+    degree_max = -1
+    for vertex, edge_tree in graph_dict.items():
+        
+        p = edge_tree.root
+        degree = 0
+        
+        while p != None:
+            degree += 1
+            p = p.next
+        
+        if degree > degree_max:
+            degree_max = degree
+            vertex_max = vertex
+
+    print('Answer2:', vertex_max, degree_max)
+    
+# DFS
+# 함수 들어올때 v를 인식하며 들어오므로 초기 값은 1
+def DFS(graph_dict, v, visited, component_sum=1):
+    visited[v] == 1
+    
+    p = graph_dict[v].root
+    
+    while p != None:
+        if visited[p.word] == 0:
+            DFS(graph_dict, p.word, visited, component_sum+1)
+    
+    return component_sum
+
+def answer3(graph_dict):
+    # visited 초기화
+    visited = {key:0 for key in graph_dict.keys()}
+    
+    while 0 in visited.values():
+        v = None
+        for key, value in visited.items():
+            if value == 0:
+                v = key
+                break
+            
+        DFS(graph_dict, v)
+        
+
                 
+
+            
+            
+        
+
+
+        
             
 
+# ================================================================================
 
 with open('./files/dict_simplified.txt', 'r') as f:
     explain_word = defaultdict(str)
@@ -106,15 +166,13 @@ with open('./files/dict_simplified.txt', 'r') as f:
 graph_dict = defaultdict(Tree)
 
 
-# dict의 dict로
-
-# 사전 내 각 단어와 그에 대한 설명 확인
-# value = dict 타입
+# graph 만들기
 for title, value in explain_word.items():
     # 설명 내의 단어를 확인
     for word in value.split():
         # word가 사전의 단어들에 속한다면 (title에 속한다면)
         if word in explain_word.keys():
             make_graph(word, title, graph_dict)
-                
-print(graph_dict['volcano'].traversal())
+
+answer1(graph_dict)
+answer2(graph_dict)
