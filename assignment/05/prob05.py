@@ -1,4 +1,5 @@
 from collections import defaultdict
+from collections import deque
 
 class Node:
     
@@ -12,8 +13,8 @@ class Tree:
     
     # title : 연결되는 대상이 되는 노드 (dict의 key로 표현됨)
     # root : Node 객체, title과 연결되어 있는 노드
-    def __init__(self, root=None):
-
+    def __init__(self, title, root=None):
+        self.title = title
         self.root = root
         
     
@@ -21,7 +22,7 @@ class Tree:
     # 단어 A의 설명에 B 등장횟수 + 단어 B의 설명에 A 등장횟수    
     def push(self, word):
         tmp = Node(word, self.root)     # root를 자식으로 하는 노드를 만들고
-        self.root = tmp     # 자신이 루트가 됨
+        self.root = tmp                 # 자신이 루트가 됨
         
         
     def search(self, target):
@@ -34,7 +35,7 @@ class Tree:
                 return p    # target을 찾았으므로 바로 반환
             p = p.next
         
-        return p        # None 반환
+        return p            # None 반환
     
                 
     def update(self, Node_target):
@@ -57,10 +58,10 @@ def make_graph(word, title, graph_dict):
     if not word in graph_dict.keys() or not title in graph_dict.keys():
         
         if not word in graph_dict.keys():
-            graph_dict[word] = Tree()
+            graph_dict[word] = Tree(word)
             
         if not title in graph_dict.keys():
-            graph_dict[title] = Tree()
+            graph_dict[title] = Tree(title)
         
         graph_dict[word].push(title)
         graph_dict[title].push(word)
@@ -142,24 +143,49 @@ def answer3(graph_dict):
                 v = key
                 break
             
-        # 변경 가능한 객체를 매개변수로 받아와 함수 안에서 작업하면 함수 밖에 존재하는 실체에도 값이 적용됨
+        # (python)변경 가능한 객체를 매개변수로 받아와 함수 안에서 작업하면 함수 밖에 존재하는 실체에도 값이 적용됨
         compo_sum = DFS(graph_dict, v, visited)
         if compo_sum > compo_max:
             compo_max = compo_sum
     
     print('Answer3:', compo_max)   
-        
 
+# BFS
+def answer4(word, k, graph_dict):
+    
+    print_total = 0   # 출력된 단어의 개수
+    distance = {key : -1 for key in graph_dict.keys()}
+    q = deque()
+    
+    # 시작 노드 초기화
+    distance[word] = 0
+    q.append(graph_dict[word])
+    print(word)
+    print_total += 1
+    
+    while q:        # q가 비어있지 않을 동안 반복
+        target = q.popleft()
+        
+        if distance[target.title] > k:
+            break
+        
+        p = target.root
+        
+        while p != None:    # 해당 노드에 인접한 노드 확인
+            
+            if distance[p.word] == -1:
+                distance[p.word] = distance[target.title] + 1
+                q.append(graph_dict[p.word])
+                print(p.word)
+                print_total += 1
                 
+            p = p.next
+    
+    print(print_total)
 
             
             
         
-
-
-        
-            
-
 # ================================================================================
 
 with open('./files/dict_simplified.txt', 'r') as f:
@@ -181,6 +207,14 @@ for title, value in explain_word.items():
         if word in explain_word.keys():
             make_graph(word, title, graph_dict)
 
+input_4 = input('Answer4 input(word, k) : ')
+# input_5 = input('Answer5 input : (word_1, word_2)')
+
+word_input_4, k = input_4.split()
+
+
+
 answer1(graph_dict)
 answer2(graph_dict)
 answer3(graph_dict)
+answer4(word_input_4, int(k), graph_dict)
