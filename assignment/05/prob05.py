@@ -1,5 +1,6 @@
 from collections import defaultdict
 from collections import deque
+import heapq
 
 class Node:
     
@@ -183,8 +184,70 @@ def answer4(word, k, graph_dict):
     
     print(print_total)
 
-            
-            
+# Dijkstra
+def answer5(graph, start_node, end_node):
+    """
+    다익스트라 알고리즘을 사용하여 주어진 그래프에서 최단 경로를 찾습니다.
+
+    :param graph: graph_dict (defaultdict(Tree) 형태)
+    :param start_node: 시작 노드 (단어)
+    :param end_node: 도착 노드 (단어)
+    :return: (최단 경로 리스트, 총 가중치) 또는 경로가 없을 경우 (None, float('inf'))
+    """
+    # 시작 또는 도착 노드가 그래프에 없는 경우
+    if start_node not in graph.keys() or end_node not in graph.keys():
+        return None, float('inf')
+
+    # 시작 노드로부터 모든 노드까지의 거리를 저장할 딕셔너리 (초기값: 무한대)
+    distances = {node: float('inf') for node in graph.keys()}
+    # 시작 노드의 거리는 0으로 초기화
+    distances[start_node] = 0
+    
+    # 경로 복원을 위해 이전 노드를 기록할 딕셔너리
+    predecessor = {node: None for node in graph.keys()}
+
+    # 우선순위 큐(최소 힙) 생성 후 시작 노드 추가. (거리, 노드) 튜플 형태
+    priority_queue = [(0, start_node)]
+
+    while priority_queue:
+        # 현재 가장 거리가 짧은 노드를 큐에서 추출
+        current_distance, current_node = heapq.heappop(priority_queue)
+
+        # 이미 처리된 노드(더 짧은 경로가 발견된 노드)라면 건너뛰기
+        if current_distance > distances[current_node]:
+            continue
+
+        # 목표 노드에 도달했다면, 경로를 재구성하여 반환하고 종료
+        if current_node == end_node:
+            path = []
+            node = end_node
+            while node is not None:
+                path.append(node)
+                node = predecessor[node]
+            # 경로를 시작 -> 도착 순으로 뒤집기
+            return path[::-1], distances[end_node]
+
+        # 현재 노드와 연결된 이웃 노드들을 확인
+        # traversal() 메서드가 {이웃노드: 가중치} 딕셔너리를 반환
+        neighbors = graph[current_node].traversal()
+        
+        neighbors = {key: 1 / value for key, value in neighbors.items() if value != 0}
+        
+        
+        for neighbor, weight in neighbors.items():
+            # 현재 노드를 거쳐 이웃 노드로 가는 새로운 거리 계산
+            distance = current_distance + weight
+
+            # 새로운 경로가 기존 경로보다 짧은 경우
+            if distance < distances[neighbor]:
+                # 거리와 이전 노드 정보 업데이트
+                distances[neighbor] = distance
+                predecessor[neighbor] = current_node
+                # 우선순위 큐에 새로운 (거리, 이웃 노드) 추가
+                heapq.heappush(priority_queue, (distance, neighbor))
+
+    # 큐가 비었는데 도착 노드에 도달하지 못했다면 경로가 없는 것
+    return None, float('inf')   
         
 # ================================================================================
 
@@ -207,14 +270,15 @@ for title, value in explain_word.items():
         if word in explain_word.keys():
             make_graph(word, title, graph_dict)
 
-input_4 = input('Answer4 input(word, k) : ')
-# input_5 = input('Answer5 input : (word_1, word_2)')
+# input_4 = input('Answer4 input(word, k) : ')
+# # input_5 = input('Answer5 input : (word_1, word_2)')
 
-word_input_4, k = input_4.split()
+# word_input_4, k = input_4.split()
 
 
 
-answer1(graph_dict)
-answer2(graph_dict)
-answer3(graph_dict)
-answer4(word_input_4, int(k), graph_dict)
+# answer1(graph_dict)
+# answer2(graph_dict)
+# answer3(graph_dict)
+# answer4(word_input_4, int(k), graph_dict)
+print(dijkstra(graph_dict, 'parity', 'parcel'))
