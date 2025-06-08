@@ -3,7 +3,9 @@ from collections import deque
 import heapq
 
 class Node:
-    
+    """
+    Tree 클래스의 요소가 될 Node 클래스
+    """
     def __init__(self, word, next = None, weight = 1):
         self.word = word
         self.weight = weight
@@ -11,6 +13,10 @@ class Node:
 
 # dict의 value들 == Tree 객체가 됨
 class Tree:
+    """
+    dict의 value값으로 들어갈 Tree 객체 \n 
+    Tree를 구성하는 요소인 Node 객체는 title에 인접한 노드들을 의미한다.
+    """
     
     # title : 연결되는 대상이 되는 노드 (dict의 key로 표현됨)
     # root : Node 객체, title과 연결되어 있는 노드
@@ -22,12 +28,21 @@ class Tree:
     # 연관성이 있는 두 단어 A와 B를 연결하는 에지의 가중치는
     # 단어 A의 설명에 B 등장횟수 + 단어 B의 설명에 A 등장횟수    
     def push(self, word):
+        """트리(연결리스트) 내에 문자열을 value로 가지는 Node 추가
+
+        Args:
+            word (str): 추가하고 싶은 문자열
+        """
         tmp = Node(word, self.root)     # root를 자식으로 하는 노드를 만들고
         self.root = tmp                 # 자신이 루트가 됨
         
         
     def search(self, target):
-        
+        """Tree 내 요소들을 순차검색
+
+        :param target: 찾고 싶은 단어 (str)
+        :return: Node 객체 (발견 시) 또는 None (미발견 시)
+        """
         p = self.root
         # q = None
         
@@ -40,9 +55,17 @@ class Tree:
     
                 
     def update(self, Node_target):
+        """Node 가중치를 1 증가
+
+        :param Node_target: 가중치 증가 대상이 될 Node (Node)
+        """
         Node_target.weight += 1
         
     def traversal(self):
+        """Tree 내 요소들의 정보를 반환
+        
+        :return: Tree 내 요소 정보 (dict)
+        """
         result = {}
         p = self.root
         
@@ -54,6 +77,13 @@ class Tree:
             
 # graph_dict : Tree 객체를 요소로 하는 defaultdict
 def make_graph(word, title, graph_dict):
+    """word와 title간 연관성을 graph로 표현하는 함수
+
+    Args:
+        word (str): 대상 단어 1
+        title (str): 대상 단어 2
+        graph_dict (dict): 단어를 key로, Tree를 value로 하는 dict
+    """
     
     # 연관성이 없었던 경우 1 - 둘 중 하나라도 edge 트리를 가지지 않을 경우
     if not word in graph_dict.keys() or not title in graph_dict.keys():
@@ -121,6 +151,16 @@ def answer2(graph_dict):
 # DFS
 # 함수 들어올때 v를 인식하며 들어오므로 component_sum의 초기 값은 1
 def DFS(graph_dict, v, visited):
+    """DFS로 하나의 connected component 내 Node의 개수를 구하는 함수
+
+    Args:
+        graph_dict (dict): graph를 나타내는 dict
+        v (str): DFS를 시작하는 Node의 단어
+        visited (list): 방문 여부를 나타내는 리스트
+
+    Returns:
+        component_sum(int): connected component 내 노드의 개수
+    """
     visited[v] = 1
     component_sum = 1
     
@@ -153,6 +193,13 @@ def answer3(graph_dict):
 
 # BFS
 def answer4(word, k, graph_dict):
+    """BFS를 이용하여 단어(word)로부터 떨어진 거리가 k 이하인 모든 단어를 찾아 한 줄에 하나씩 출력하는 함수
+
+    Args:
+        word (str): 단어에 해당하는 문자열
+        k (int): 탐색 깊이
+        graph_dict (dict): 그래프를 표현하는 dict
+    """
     
     print_total = 0   # 출력된 단어의 개수
     distance = {key : -1 for key in graph_dict.keys()}
@@ -167,7 +214,7 @@ def answer4(word, k, graph_dict):
     while q:        # q가 비어있지 않을 동안 반복
         target = q.popleft()
         
-        if distance[target.title] > k:
+        if distance[target.title] > k:  # 탐색 깊이를 넘어선 경우
             break
         
         p = target.root
@@ -184,27 +231,31 @@ def answer4(word, k, graph_dict):
     
     print(print_total)
 
-# Dijkstra
-def answer5(graph, start_node, end_node):
-    """
-    다익스트라 알고리즘을 사용하여 주어진 그래프에서 최단 경로를 찾습니다.
 
-    :param graph: graph_dict (defaultdict(Tree) 형태)
-    :param start_node: 시작 노드 (단어)
-    :param end_node: 도착 노드 (단어)
-    :return: (최단 경로 리스트, 총 가중치) 또는 경로가 없을 경우 (None, float('inf'))
+# Dijkstra
+def answer5(graph_dict, start_node, end_node):
+    """
+    다익스트라 알고리즘을 사용하여 주어진 그래프에서 
+
+    Args:
+        graph_dict(dict): graph_dict_dict
+        start_node(str): 시작 노드에 해당하는 단어
+        end_node(str): 도착 노드에 해당하는 단어
+        
+    Returns:
+        (최단 경로 리스트, 총 가중치) 또는 경로가 없을 경우 (None, float('inf'))
     """
     # 시작 또는 도착 노드가 그래프에 없는 경우
-    if start_node not in graph.keys() or end_node not in graph.keys():
-        return None, float('inf')
+    if start_node not in graph_dict.keys() or end_node not in graph_dict.keys():
+        print('시작 또는 도착 노드가 그래프에 존재하지 않습니다.')
 
-    # 시작 노드로부터 모든 노드까지의 거리를 저장할 딕셔너리 (초기값: 무한대)
-    distances = {node: float('inf') for node in graph.keys()}
+    # 거리 초기화
+    distances = {node: float('inf') for node in graph_dict.keys()}
     # 시작 노드의 거리는 0으로 초기화
     distances[start_node] = 0
     
-    # 경로 복원을 위해 이전 노드를 기록할 딕셔너리
-    predecessor = {node: None for node in graph.keys()}
+    # predecessor 초기화
+    predecessor = {node: None for node in graph_dict.keys()}
 
     # 우선순위 큐(최소 힙) 생성 후 시작 노드 추가. (거리, 노드) 튜플 형태
     priority_queue = [(0, start_node)]
@@ -213,24 +264,39 @@ def answer5(graph, start_node, end_node):
         # 현재 가장 거리가 짧은 노드를 큐에서 추출
         current_distance, current_node = heapq.heappop(priority_queue)
 
-        # 이미 처리된 노드(더 짧은 경로가 발견된 노드)라면 건너뛰기
+        # 이미 처리된 노드(더 짧은 경로가 발견된 노드)라면 패스
         if current_distance > distances[current_node]:
             continue
 
         # 목표 노드에 도달했다면, 경로를 재구성하여 반환하고 종료
         if current_node == end_node:
             path = []
-            node = end_node
+            node = end_node     # 문자열
             while node is not None:
                 path.append(node)
                 node = predecessor[node]
             # 경로를 시작 -> 도착 순으로 뒤집기
-            return path[::-1], distances[end_node]
+            path = path[::-1]
+
+            # 경로 출력
+            for idx in range(len(path)):
+                print(path[idx], end=' ')
+                
+                if idx+1 != len(path):
+                    print('<==>', end=' ')
+                else:
+                    print()
+            
+            # 거리 출력
+            print('Distance:', distances[end_node])
+        
+            return
 
         # 현재 노드와 연결된 이웃 노드들을 확인
         # traversal() 메서드가 {이웃노드: 가중치} 딕셔너리를 반환
-        neighbors = graph[current_node].traversal()
+        neighbors = graph_dict[current_node].traversal()
         
+        # 거리 : 1/가중치 반영
         neighbors = {key: 1 / value for key, value in neighbors.items() if value != 0}
         
         
@@ -245,9 +311,6 @@ def answer5(graph, start_node, end_node):
                 predecessor[neighbor] = current_node
                 # 우선순위 큐에 새로운 (거리, 이웃 노드) 추가
                 heapq.heappush(priority_queue, (distance, neighbor))
-
-    # 큐가 비었는데 도착 노드에 도달하지 못했다면 경로가 없는 것
-    return None, float('inf')   
         
 # ================================================================================
 
@@ -270,15 +333,16 @@ for title, value in explain_word.items():
         if word in explain_word.keys():
             make_graph(word, title, graph_dict)
 
-# input_4 = input('Answer4 input(word, k) : ')
-# # input_5 = input('Answer5 input : (word_1, word_2)')
+input_4 = input('Answer4 input(word, k) : ')
+input_5 = input('Answer5 input(word_1, word_2) : ')
 
-# word_input_4, k = input_4.split()
+word_input_4, k = input_4.split()
+word1_input_5, word2_input_5 = input_5.split()
 
 
 
-# answer1(graph_dict)
-# answer2(graph_dict)
-# answer3(graph_dict)
-# answer4(word_input_4, int(k), graph_dict)
-print(dijkstra(graph_dict, 'parity', 'parcel'))
+answer1(graph_dict)
+answer2(graph_dict)
+answer3(graph_dict)
+answer4(word_input_4, int(k), graph_dict)
+answer5(graph_dict, word1_input_5, word2_input_5)
