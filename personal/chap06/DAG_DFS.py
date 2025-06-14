@@ -2,7 +2,7 @@ import collections
 
 class DAG:
     """
-    칸 알고리즘 구현을 위한 DAG(방향성 비순환 그래프) 자료구조 클래스.
+    DFS 알고리즘 구현을 위한 DAG(방향성 비순환 그래프) 자료구조 클래스.
     
     속성:
     - V (int): 그래프의 정점(vertex) 개수
